@@ -25,7 +25,7 @@ class Ui_Dialog(object):
         self.stop_detect_btn.setGeometry(QtCore.QRect(1000, 200, 121, 41))
         self.stop_detect_btn.setObjectName("stop_detect_btn")
         self.label_head = QtWidgets.QLabel(Dialog)
-        self.label_head.setGeometry(QtCore.QRect(210, 0, 511, 31))
+        self.label_head.setGeometry(QtCore.QRect(230, 0, 491, 31))
         self.label_head.setStyleSheet("background-color: rgb(255, 255, 127);\n"
 "\n"
 "")

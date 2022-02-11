@@ -47,7 +47,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.release_mouse = ()
         self.press_mouse = ()
         self.video_name = ""  # 被播放视频的路径
-        self.frame = []  # 存图片
+        self.frame = []  # 保存图片
         self.stop_show_flag = False  # 检测是否暂停播放
         self.detect_flag = False  # 检测flag
         self.id_tracker = {}

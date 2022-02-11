@@ -9,9 +9,9 @@ import cv2
 
 class Count:
     def __init__(self):
-        # list 与蓝色框重叠
+        # list与蓝色框重叠
         self.list_overlapping_blue_polygon = []
-        # list 与黄色polygon重叠
+        # list与黄色polygon重叠
         self.list_overlapping_yellow_polygon = []
         # 图片尺寸
         self.height = 0
