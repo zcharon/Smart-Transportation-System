@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QPushButton" name="open_video_btn">
    <property name="geometry">
     <rect>
@@ -115,11 +118,14 @@
   <widget class="QLabel" name="label_mouse_x">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>630</y>
+     <x>840</x>
+     <y>680</y>
      <width>72</width>
      <height>15</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -128,11 +134,14 @@
   <widget class="QLabel" name="label_mouse_y">
    <property name="geometry">
     <rect>
-     <x>820</x>
-     <y>630</y>
+     <x>920</x>
+     <y>680</y>
      <width>72</width>
      <height>15</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>

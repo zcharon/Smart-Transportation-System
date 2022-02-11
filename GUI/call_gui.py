@@ -53,6 +53,11 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.id_tracker = {}
         self.cap = []
         self.timer_camera = QTimer()  # 定义定时器
+        self.open_video_btn.setText("打开视频")
+        self.go_detect_btn.setText("开始检测")
+        self.stop_detect_btn.setText("停止检测")
+        self.label_head.setText("请选择视频进行分析")
+        self.frame_label.setText("请选择视频分析")
 
     def open_video(self):
         """
