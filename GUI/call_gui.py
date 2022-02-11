@@ -15,16 +15,16 @@ from PyQt5.QtCore import *
 
 from .gui import Ui_Dialog
 from detector import DetectorV5
-from count_car_ import Count
+from count_car import Count
 
 
 class MyMainForm(QMainWindow, Ui_Dialog):
     def __init__(self, parent=None):
         super(MyMainForm, self).__init__(parent)
+        self.setupUi(self)
         self.release_mouse = ()
         self.press_mouse = ()
         self.video_name = ""  # 被播放视频的路径
-        self.setupUi(self)
         self.frame = []  # 存图片
         self.stop_show_flag = False  # 检测是否暂停播放
         self.detect_flag = False  # 检测flag
@@ -40,10 +40,25 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         # 是否进行检测
         self.go_detect_btn.clicked.connect(self.detection)
 
+    def __reset_parameters(self):
+        """
+        打开新的视频文件时，进行参数重置
+        """
+        self.release_mouse = ()
+        self.press_mouse = ()
+        self.video_name = ""  # 被播放视频的路径
+        self.frame = []  # 存图片
+        self.stop_show_flag = False  # 检测是否暂停播放
+        self.detect_flag = False  # 检测flag
+        self.id_tracker = {}
+        self.cap = []
+        self.timer_camera = QTimer()  # 定义定时器
+
     def open_video(self):
         """
         打开视频按钮响应函数
         """
+        self.__reset_parameters()
         self.video_name, _ = QFileDialog.getOpenFileName(self, "Open", "", "*.mp4;;*.avi;;All Files(*)")
         # self.video_name = 0
         if self.video_name != "":  # “”为用户取消
@@ -60,7 +75,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
             ret, self.frame = self.cap.read()
             if ret:
                 frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
-                frame = imutils.resize(frame, height=500)
+                frame = imutils.resize(frame, height=self.frame_label.size().height())
                 if self.detect_flag:
                     result_im, list_bboxs, self.id_tracker = self.det.feedCap(frame, self.id_tracker)
                     # frame = imutils.resize(result_im, height=500)
@@ -69,7 +84,10 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                         self.count.height = frame.shape[0]
                         self.count.point_1 = self.press_mouse
                         self.count.point_2 = self.release_mouse
-                        frame, _, _ = self.count.count_car(frame, list_bboxs)
+                        frame, up_count, down_count = self.count.count_car(frame, list_bboxs)
+                        self.traffic_label.setText("正在进行车流量统计")
+                        self.up_count_label.setText("UP:" + str(up_count))
+                        self.down_count_label.setText("DOWN:" + str(down_count))
 
                 height, width, bytesPerComponent = frame.shape
                 bytesPerLine = bytesPerComponent * width
@@ -126,15 +144,15 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                 x = event.x()
                 y = event.y()
                 # 鼠标过界修正
-                if x < 70:
-                    x = 70
-                elif x > 821:
-                    x = 821
-                if y < 100:
-                    y = 100
-                elif y > 521:
-                    y = 521
-                self.press_mouse = (x-70, y-100)
+                if x < 10:
+                    x = 10
+                elif x > 971:
+                    x = 971
+                if y < 40:
+                    y = 40
+                elif y > 631:
+                    y = 631
+                self.press_mouse = (x-10, y-40)
                 print(self.press_mouse)
 
     def mouseReleaseEvent(self, event):
@@ -145,18 +163,18 @@ class MyMainForm(QMainWindow, Ui_Dialog):
             x = event.x()
             y = event.y()
             # 鼠标过界修正
-            if x < 70:
-                x = 70
-            elif x > 821:
-                x = 821
-            if y < 100:
-                y = 100
-            elif y > 521:
-                y = 521
-            self.release_mouse = (x-70, y-100)
+            if x < 10:
+                x = 10
+            elif x > 971:
+                x = 971
+            if y < 40:
+                y = 40
+            elif y > 631:
+                y = 631
+            self.release_mouse = (x-10, y-40)
+            print(self.release_mouse)
             self.label_mouse_x.setText("")
             self.label_mouse_y.setText("")
-            print(self.release_mouse)
 
     def mouseMoveEvent(self, event):
         """

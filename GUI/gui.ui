@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="open_video_btn">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>110</y>
+     <x>1000</x>
+     <y>40</y>
      <width>121</width>
      <height>41</height>
     </rect>
@@ -32,8 +32,8 @@
   <widget class="QPushButton" name="go_detect_btn">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>190</y>
+     <x>1000</x>
+     <y>120</y>
      <width>121</width>
      <height>41</height>
     </rect>
@@ -45,8 +45,8 @@
   <widget class="QPushButton" name="stop_detect_btn">
    <property name="geometry">
     <rect>
-     <x>950</x>
-     <y>270</y>
+     <x>1000</x>
+     <y>200</y>
      <width>121</width>
      <height>41</height>
     </rect>
@@ -58,8 +58,8 @@
   <widget class="QLabel" name="label_head">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>40</y>
+     <x>210</x>
+     <y>0</y>
      <width>511</width>
      <height>31</height>
     </rect>
@@ -82,10 +82,10 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>100</y>
-     <width>801</width>
-     <height>501</height>
+     <x>10</x>
+     <y>40</y>
+     <width>981</width>
+     <height>631</height>
     </rect>
    </property>
    <property name="mouseTracking">
@@ -102,8 +102,8 @@
   <widget class="QLabel" name="event_x">
    <property name="geometry">
     <rect>
-     <x>780</x>
-     <y>40</y>
+     <x>730</x>
+     <y>0</y>
      <width>71</width>
      <height>21</height>
     </rect>
@@ -133,6 +133,54 @@
      <width>72</width>
      <height>15</height>
     </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="up_count_label">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>680</y>
+     <width>51</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="down_count_label">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>680</y>
+     <width>72</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="traffic_label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>680</y>
+     <width>141</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>

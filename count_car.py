@@ -131,10 +131,19 @@ class Count:
             self.list_overlapping_blue_polygon.clear()
             self.list_overlapping_yellow_polygon.clear()
 
+<<<<<<< HEAD
         # 输出计数信息
         text_draw = 'DOWN: ' + str(self.down_count) + ' , UP: ' + str(self.up_count)
         frame = cv2.putText(img=frame, text=text_draw,
                             org=draw_text_postion,
                             fontFace=font_draw_number,
                             fontScale=0.75, color=(0, 0, 255), thickness=2)
+=======
+        # # 输出计数信息
+        # text_draw = 'DOWN: ' + str(self.down_count) + ' , UP: ' + str(self.up_count)
+        # frame = cv2.putText(img=frame, text=text_draw,
+        #                     org=draw_text_postion,
+        #                     fontFace=font_draw_number,
+        #                     fontScale=0.75, color=(0, 0, 255), thickness=2)
+>>>>>>> f25945e (1.修改count_car使车流量统计数据在GUI中显示而不在frame中显示)
         return frame, self.up_count, self.down_count
