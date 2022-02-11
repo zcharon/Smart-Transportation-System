@@ -1,3 +1,28 @@
+# 本项目应该忽略的文件
+# 1. video视频文件，文件路径
+# Yolo_DeepSort/
+#    -video/
+#      --reult/
+#          ---***.mp4
+#      --test/
+#          ---***.mp4
+video/result/
+video/test/
+
+# 2. yolov5数据集
+# Yolo_DeepSort/
+#    -yolov5/
+#      --data/
+#          ---coco128
+yolov5/data/coco128/
+
+# 3. yolov5权重文件
+yolov5/runs/
+yolov5/weights/*.pt
+
+# yolox不成熟，不予上传
+yolox/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
