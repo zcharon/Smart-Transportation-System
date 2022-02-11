@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1124</width>
-    <height>806</height>
+    <width>1590</width>
+    <height>915</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,52 +16,10 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="open_video_btn">
-   <property name="geometry">
-    <rect>
-     <x>1000</x>
-     <y>40</y>
-     <width>121</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string>打开视频</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="go_detect_btn">
-   <property name="geometry">
-    <rect>
-     <x>1000</x>
-     <y>120</y>
-     <width>121</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>开始检测</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="stop_detect_btn">
-   <property name="geometry">
-    <rect>
-     <x>1000</x>
-     <y>200</y>
-     <width>121</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>停止检测</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_head">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>430</x>
      <y>0</y>
      <width>491</width>
      <height>31</height>
@@ -79,16 +37,16 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="frame_label">
+  <widget class="QLabel" name="label_frame">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>40</y>
-     <width>981</width>
-     <height>631</height>
+     <y>30</y>
+     <width>1331</width>
+     <height>821</height>
     </rect>
    </property>
    <property name="mouseTracking">
@@ -102,24 +60,11 @@
     <string>请选择视频分析</string>
    </property>
   </widget>
-  <widget class="QLabel" name="event_x">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>0</y>
-     <width>71</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_mouse_x">
    <property name="geometry">
     <rect>
-     <x>840</x>
-     <y>680</y>
+     <x>1190</x>
+     <y>860</y>
      <width>72</width>
      <height>15</height>
     </rect>
@@ -134,8 +79,8 @@
   <widget class="QLabel" name="label_mouse_y">
    <property name="geometry">
     <rect>
-     <x>920</x>
-     <y>680</y>
+     <x>1270</x>
+     <y>860</y>
      <width>72</width>
      <height>15</height>
     </rect>
@@ -147,12 +92,12 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="up_count_label">
+  <widget class="QLabel" name="label_up_count">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>680</y>
-     <width>51</width>
+     <x>1420</x>
+     <y>290</y>
+     <width>61</width>
      <height>16</height>
     </rect>
    </property>
@@ -163,13 +108,13 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="down_count_label">
+  <widget class="QLabel" name="label_down_count">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>680</y>
-     <width>72</width>
-     <height>15</height>
+     <x>1350</x>
+     <y>290</y>
+     <width>61</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -179,11 +124,11 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="traffic_label">
+  <widget class="QLabel" name="label_traffic_detail">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>680</y>
+     <x>1350</x>
+     <y>250</y>
      <width>141</width>
      <height>16</height>
     </rect>
@@ -193,6 +138,88 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>1470</x>
+     <y>0</y>
+     <width>101</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QPushButton" name="btn_illegal_parking">
+      <property name="text">
+       <string>违停检测</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_retrograde">
+      <property name="text">
+       <string>逆行检测</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton_3">
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>1370</x>
+     <y>0</y>
+     <width>95</width>
+     <height>231</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QPushButton" name="btn_open_video">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>打开视频</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_go_detect">
+      <property name="text">
+       <string>开始检测</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_stop_detect">
+      <property name="text">
+       <string>停止播放</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="label_frame_size">
+   <property name="geometry">
+    <rect>
+     <x>1360</x>
+     <y>840</y>
+     <width>72</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>图片尺寸</string>
    </property>
   </widget>
  </widget>

@@ -32,7 +32,7 @@ class Count:
         mask_image_temp = np.zeros((self.height, self.width), dtype=np.uint8)
         # 初始化2个撞线polygon  蓝色
         # 蓝色多边形坐标，可根据自己的场景修改
-        list_pts_blue = [[self.point_1[0], self.point_1[1] - 40], [self.point_2[0], self.point_2[1] - 40],
+        list_pts_blue = [[self.point_1[0], self.point_1[1] - 20], [self.point_2[0], self.point_2[1] - 20],
                          [self.point_2[0], self.point_2[1]], [self.point_1[0], self.point_1[1]]]
         ndarray_pts_blue = np.array(list_pts_blue, np.int32)
         polygon_blue_value_1 = cv2.fillPoly(mask_image_temp, [ndarray_pts_blue], color=1)  # 构建多边形
@@ -40,7 +40,7 @@ class Count:
         # 填充第二个polygon    黄色
         mask_image_temp = np.zeros((self.height, self.width), dtype=np.uint8)
         # 黄色多边形坐标，可根据自己的场景修改
-        list_pts_yellow = [[self.point_1[0], self.point_1[1] + 40], [self.point_2[0], self.point_2[1] + 40],
+        list_pts_yellow = [[self.point_1[0], self.point_1[1] + 20], [self.point_2[0], self.point_2[1] + 20],
                            [self.point_2[0], self.point_2[1]], [self.point_1[0], self.point_1[1]]]
         ndarray_pts_yellow = np.array(list_pts_yellow, np.int32)
         polygon_yellow_value_2 = cv2.fillPoly(mask_image_temp, [ndarray_pts_yellow], color=2)  # 构建多边形
@@ -50,31 +50,14 @@ class Count:
         polygon_mask_blue_and_yellow = polygon_blue_value_1 + polygon_yellow_value_2
         # 缩小尺寸，1920x1080->960x540
         polygon_mask_blue_and_yellow = cv2.resize(polygon_mask_blue_and_yellow, (self.width, self.height))
-        # 蓝 色盘 b,g,r
-        blue_color_plate = [255, 0, 0]
-        # 蓝 polygon图片
-        blue_image = np.array(polygon_blue_value_1 * blue_color_plate, np.uint8)
-
-        # 黄 色盘
-        yellow_color_plate = [0, 255, 255]
-        # 黄 polygon图片
-        yellow_image = np.array(polygon_yellow_value_2 * yellow_color_plate, np.uint8)
-
-        # 彩色图片（值范围 0-255）
-        color_polygons_image = blue_image + yellow_image
-        # 缩小尺寸，1920x1080->960x540
-        color_polygons_image = cv2.resize(color_polygons_image, (self.width, self.height))
-
-        return polygon_mask_blue_and_yellow, color_polygons_image
+        return polygon_mask_blue_and_yellow
 
     def count_car(self, frame, list_bboxs):
         if self.width <= 0 or self.height <= 0:
             return frame, 0, 0
         # 根据视频尺寸，填充供撞线计算使用的polygon
-        polygon_mask_blue_and_yellow, color_polygons_image = self.__draw_mask()
-        font_draw_number = cv2.FONT_HERSHEY_SIMPLEX
-        draw_text_postion = (int((self.width / 2.0) * 0.01), int((self.height / 2.0) * 0.05))
-        frame = cv2.add(frame, color_polygons_image)
+        polygon_mask_blue_and_yellow = self.__draw_mask()
+        cv2.line(frame, self.point_1, self.point_2, (0, 0, 255), 2, 4)
         if len(list_bboxs) > 0:
             # ----------------------判断撞线----------------------
             for item_bbox in list_bboxs:

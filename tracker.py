@@ -39,7 +39,7 @@ def draw_track(image, veh_id_old, bboxes):
 
     for values in veh_id_old.values():
         for point in values:
-            cv2.circle(image, (point[0], point[1]), 5, (0, 0, 255), -1)
+            cv2.circle(image, (point[0], point[1]), 2, (0, 0, 255), -1)
     return image, veh_id_old
 
 
@@ -49,7 +49,7 @@ def plot_bboxes(image, bboxes, id_tracker, line_thickness=None):
     """
     # Plots one bounding box on image img
     tl = line_thickness or round(
-        0.002 * (image.shape[0] + image.shape[1]) / 2) + 1  # line/font thickness
+        0.001 * (image.shape[0] + image.shape[1]) / 2) + 1  # line/font thickness
 
     image, id_tracker = draw_track(image, id_tracker, bboxes)
     for (x1, y1, x2, y2, cls_id, pos_id) in bboxes:
