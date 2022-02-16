@@ -16,7 +16,7 @@ from PyQt5.QtCore import *
 from .gui import Ui_Dialog
 from detector import DetectorV5
 from count_car import Count
-from behavior import Behavior
+from behavior import get_illegal_parking
 
 
 class MyMainForm(QMainWindow, Ui_Dialog):
@@ -35,7 +35,8 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.cap = []
         self.timer_camera = QTimer()  # 定义定时器
         self.count = Count()  # 定义计数器统计车流量
-        self.behavior = Behavior()
+        self.ill_parking_id_dirt = {}
+        self.frame_count = 0
 
         # 开启视频按键
         self.btn_open_video.clicked.connect(self.open_video)
@@ -44,7 +45,9 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         # 是否进行检测
         self.btn_go_detect.clicked.connect(self.detection)
         # 是否进行违停检测
-        self.btn_illegal_parking.clicked.connect(self.__get_illegal_parking)
+        self.btn_illegal_parking.clicked.connect(self.__conn_illegal_parking)
+        # 下拉列表控件
+        self.combox_fun.currentIndexChanged.connect(self.select_change)
 
     def open_video(self):
         """
@@ -73,10 +76,12 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                     # 如果绘制了车道线，则进行车道线统计
                     if len(self.release_mouse) > 0 and len(self.press_mouse) > 0:
                         frame = self.__get_traffic_flow(frame, list_bboxs)
-                    if self.ill_parking_flag:
-                        self.behavior.get_illegal_parking(self.id_tracker)
+                    # 进行车辆违停检测, 每三帧检测一次，提高系统效率
+                    if self.ill_parking_flag and self.frame_count % 3 == 0:
+                        self.__get_ill_parking()
                 height, width, bytesPerComponent = frame.shape
                 bytesPerLine = bytesPerComponent * width
+                self.frame_count += 1
                 q_image = QImage(frame.data, width, height, bytesPerLine,
                                  QImage.Format_RGB888).scaled(self.label_frame.width(), self.label_frame.height())
                 self.label_frame.setPixmap(QPixmap.fromImage(q_image))
@@ -124,6 +129,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         """
         鼠标单击响应函数
         """
+        flag = False  # 判断鼠标点击区域是否在视频区域
         if self.detect_flag:
             if event.buttons() & QtCore.Qt.LeftButton:
                 self.label_frame.setMouseTracking(True)
@@ -131,33 +137,36 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                 y = event.y()
                 # 鼠标过界修正
                 if x < 10:
-                    x = 10
+                    flag = True
                 elif x > 1331:
-                    x = 1331
+                    flag = True
                 if y < 30:
-                    y = 30
+                    flag = True
                 elif y > 821:
-                    y = 821
-                self.press_mouse = (x-10, y-30)
+                    flag = True
+                if not flag:
+                    self.press_mouse = (x - 10, y - 30)
                 print(self.press_mouse)
 
     def mouseReleaseEvent(self, event):
         """
         鼠标单击释放响应函数
         """
+        flag = False  # 判断鼠标点击区域是否在视频区
         if self.detect_flag:
             x = event.x()
             y = event.y()
             # 鼠标过界修正
             if x < 10:
-                x = 10
+                flag = True
             elif x > 1331:
-                x = 1331
+                flag = True
             if y < 30:
-                y = 30
+                flag = True
             elif y > 821:
-                y = 821
-            self.release_mouse = (x-10, y-30)
+                flag = True
+            if not flag:
+                self.release_mouse = (x - 10, y - 30)
             print(self.release_mouse)
             self.label_mouse_x.setText("")
             self.label_mouse_y.setText("")
@@ -167,8 +176,22 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         鼠标移动响应函数
         """
         mouse_track = event.windowPos()
-        self.label_mouse_x.setText('X:' + str(mouse_track.x()))
-        self.label_mouse_y.setText('Y:' + str(mouse_track.y()))
+        if 10 < mouse_track.x() < 1331 and 30 < mouse_track.y() < 821:
+            self.label_mouse_x.setText('X:' + str(mouse_track.x()))
+            self.label_mouse_y.setText('Y:' + str(mouse_track.y()))
+
+    def select_change(self, i):
+        # 功能区不做任何处理
+        if i == 0:
+            pass
+        # 清空车流量统计
+        elif i == 1:
+            self.count.up_count = 0
+            self.count.down_count = 0
+        # 清空车辆违停显示区
+        elif i == 2:
+            self.label_ill_parking.setText("正在进行违停检测：\n")
+            self.label_line1.setText("————————————————")
 
     def __reset_parameters(self):
         """
@@ -189,17 +212,37 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.btn_stop_detect.setText("停止检测")
         self.label_head.setText("请选择视频进行分析")
         self.label_frame.setText("请选择视频分析")
-        self.label_frame_size.setText("视频尺寸")
 
+        self.label_ill_parking.setText("")
         self.label_traffic_detail.setText("")
         self.label_up_count.setText("")
         self.label_down_count.setText("")
 
-    def __get_illegal_parking(self):
+        self.label_line1.setText("")  # 取消分割线显示
+        self.label_line0.setText("")
+
+    def __conn_illegal_parking(self):
+        """
+        车辆违停检测按键响应函数
+        """
+        self.ill_parking_flag = not self.ill_parking_flag
+        if self.ill_parking_flag:
+            self.label_ill_parking.setText("正在进行违停检测：\n")
+        else:
+            self.label_ill_parking.setText("")
+
+    def __get_ill_parking(self):
         """
         进行车辆违停检测
         """
-        self.ill_parking_flag = not self.ill_parking_flag
+        id_temp, self.ill_parking_id_dirt = get_illegal_parking(self.id_tracker, self.ill_parking_id_dirt)
+        str_ = ''
+        if len(id_temp) > 0:
+            for id_, str_time in id_temp.items():
+                str_ += '{} {}\n'.format(id_, str_time)
+            print(self.label_ill_parking.text() + str_)
+            self.label_ill_parking.setText(self.label_ill_parking.text() + str_)
+            self.label_line1.setText("————————————————")
 
     def __get_traffic_flow(self, frame, list_bboxs):
         """
@@ -211,6 +254,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.count.point_2 = self.release_mouse
         frame, up_count, down_count = self.count.count_car(frame, list_bboxs)
         self.label_traffic_detail.setText("正在进行车流量统计")
+        self.label_line0.setText("————————————————")
         self.label_up_count.setText("UP:" + str(up_count))
         self.label_down_count.setText("DOWN:" + str(down_count))
         return frame
