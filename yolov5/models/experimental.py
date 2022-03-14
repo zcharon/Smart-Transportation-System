@@ -109,6 +109,32 @@ class Ensemble(nn.ModuleList):
         y = torch.cat(y, 1)  # nms ensemble
         return y, None  # inference, train output
 
+###############################################
+# def attempt_load(weights_path, map_location=None):
+#     # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
+#     model = Ensemble()
+#     for w in weights_path if isinstance(weights_path, list) else [weights_path]:
+#         attempt_download(w)
+#         # ckpt = torch.load(w, map_location=map_location)  # load
+#         # model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
+#         model.load_state_dict(torch.load(weights_path), False)
+#         return model
+# #############################################
+    # # Compatibility updates
+    # for m in model.modules():
+    #     if type(m) in [nn.Hardswish, nn.LeakyReLU, nn.ReLU, nn.ReLU6, nn.SiLU]:
+    #         m.inplace = True  # pytorch 1.7.0 compatibility
+    #     elif type(m) is Conv:
+    #         m._non_persistent_buffers_set = set()  # pytorch 1.6.0 compatibility
+
+    # if len(model) == 1:
+    #     return model[-1]  # return model
+    # else:
+    #     print('Ensemble created with %s\n' % weights)
+    #     for k in ['names', 'stride']:
+    #         setattr(model, k, getattr(model[-1], k))
+    #     return model  # return ensemble
+
 
 def attempt_load(weights, map_location=None):
     # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a

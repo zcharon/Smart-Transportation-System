@@ -276,6 +276,22 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_retrograde">
+   <property name="geometry">
+    <rect>
+     <x>1350</x>
+     <y>480</y>
+     <width>231</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

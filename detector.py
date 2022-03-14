@@ -6,7 +6,6 @@
 import cv2
 import torch
 import numpy as np
-from PIL import Image
 
 from tracker import update_tracker
 from yolov5.models.experimental import attempt_load
@@ -14,11 +13,9 @@ from yolov5.utils.general import non_max_suppression, scale_coords
 from yolov5.utils.torch_utils import select_device
 from yolov5.utils.datasets import letterbox
 
-from yolox.yolo import YOLO
 
-MODEL_WEIGHTS_PATH_V5 = r'yolov5/weights/yolov5s.pt'
-MODEL_WEIGHTS_PATH_X = r'yolox/model_data/yolox_s.pth'
-CLASS_PATH = r'yolox/model_data/coco_classes.txt'
+# MODEL_WEIGHTS_PATH_V5 = r'yolov5/weights/yolov5s.pt'
+MODEL_WEIGHTS_PATH_V5 = r'yolov5/runs/train/exp/detrac.pt'
 
 
 class BaseDet(object):
@@ -112,7 +109,7 @@ class DetectorV5(BaseDet):
 
                 for *x, conf, cls_id in det:
                     lbl = self.names[int(cls_id)]
-                    if not lbl in ['person', 'car', 'truck']:
+                    if not lbl in ['car', 'van', 'bus', 'others']:
                         continue
                     x1, y1 = int(x[0]), int(x[1])
                     x2, y2 = int(x[2]), int(x[3])
@@ -120,28 +117,3 @@ class DetectorV5(BaseDet):
                         (x1, y1, x2, y2, lbl, conf))
 
         return im, pred_boxes
-
-
-class DetectorX(BaseDet):
-    """
-    YOLOX目标检测器
-    """
-
-    def __init__(self):
-        super(DetectorX, self).__init__()
-        self.cuda = True
-        self.letterbox_image = True
-        self.init_model()
-        self.build_config()
-
-    def init_model(self):
-        self.m = YOLO()
-
-    def preprocess(self):
-        pass
-
-    def detect(self, img):
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(np.uint8(img))
-        _, pred_boxes = self.m.detect_image(img, flag=False)
-        return _, pred_boxes
