@@ -39,7 +39,7 @@ def draw_track(image, veh_id_old, bboxes):
 
     for values in veh_id_old.values():
         for point in values:
-            cv2.circle(image, (point[0], point[1]), 2, (0, 0, 255), -1)
+            cv2.circle(image, (point[0], point[1]), 3, (70, 130, 180), -1)
     return image, veh_id_old
 
 
@@ -102,7 +102,7 @@ def update_tracker(target_detector, image, id_tracker):
                 (x1, y1, x2, y2, cls_, track_id)
             )
             current_ids.append(track_id)
-            if cls_ == 'person' or cls_ == 'car' or cls_ == 'truck':
+            if cls_ == 'van' or cls_ == 'car' or cls_ == 'bus' or 'others':
                 if not track_id in target_detector.tracker:
                     target_detector.tracker[track_id] = 0
                     face = image[y1:y2, x1:x2]

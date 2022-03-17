@@ -41,16 +41,14 @@ def __get_angle(v1, v2):
     dy1 = v1[3] - v1[1]
     dx2 = v2[2] - v2[0]
     dy2 = v2[3] - v2[1]
-    angle1 = math.atan2(dy1, dx1)
-    angle1 = int(angle1 * 180 / math.pi)
-    angle2 = math.atan2(dy2, dx2)
-    angle2 = int(angle2 * 180 / math.pi)
-    if angle1 * angle2 >= 0:
+    angle1 = math.atan2(dy1, dx1)  # 返回向量1的弧度值
+    angle2 = math.atan2(dy2, dx2)  # 返回向量2的弧度制
+    if angle1 * angle2 >= 0:  # 如果两个向量角度同号
         included_angle = abs(angle1 - angle2)
-    else:
+    else:  # 如果两个向量角度异号
         included_angle = abs(angle1) + abs(angle2)
-    if included_angle > 180:
-        included_angle = 360 - included_angle
+    if included_angle > math.pi:
+        included_angle = 2 * math.pi - included_angle
     return included_angle
 
 
@@ -59,15 +57,17 @@ def get_retrograde(id_tracker, retrograde_tracker=None, start_point=(0, 0), end_
     进行车辆逆行检测
     计算鼠标绘制向量与车辆轨迹向量的夹角，
     """
-    now_set = set()
     if retrograde_tracker is None:
         retrograde_tracker = {}
+    now_set = set()
+    add_dirt = {}
+    # mem_set = set(retrograde_tracker.keys())
     if slope is None:
-        pass
+        pass  # 直线斜率
     x = []
     y = []
-    # 如果当前ID所保存的轨迹点大数量大于10，则进行逆行检测
-    # 求车辆行驶轨迹的拟合直线，并求该拟合直线的斜率
+    # 如果当前ID所保存的轨迹点的数量大于10，则进行逆行检测
+    # 求每辆车的行驶轨迹的拟合向量，并求该拟合向量的斜率
     for key, tracker in id_tracker.items():
         if len(tracker) > 15:
             for item in tracker:
@@ -75,20 +75,18 @@ def get_retrograde(id_tracker, retrograde_tracker=None, start_point=(0, 0), end_
                 y.append(item[1])
             slope_lin, intercept_lin, _, _, _ = st.linregress(x, y)
             # 使用拟合直线计算预测向量，计算两个向量的夹角，从而判断该车辆是否逆向行驶
-            start_point_line = [tracker[0][0], tracker[0][0] * slope_lin + intercept_lin, tracker[0][1] * slope_lin +
-                                intercept_lin]
-            end_point_line = [tracker[-1][0], tracker[-1][0] * slope_lin + intercept_lin, tracker[-1][1] * slope_lin +
-                              intercept_lin]
+            start_point_line = [tracker[0][0], tracker[0][0] * slope_lin + intercept_lin]
+            end_point_line = [tracker[-1][0], tracker[-1][0] * slope_lin + intercept_lin]
             angle = __get_angle([start_point[0], start_point[1], end_point[0], end_point[1]],
                                 [start_point_line[0], start_point_line[1], end_point_line[0], end_point_line[1]])
-
-            if angle > 90:  # 如果车辆行驶
+            if angle > math.pi / 4:  # 如果车辆行驶
                 now_set.add(key)
+                # print('SET ADD', now_set)
                 if key not in retrograde_tracker:
                     retrograde_tracker[key] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-        print("SET: ", now_set)
-        print("now_set: ", now_set - retrograde_tracker.keys())
-    return retrograde_tracker, now_set - retrograde_tracker.keys()
+                    add_dirt[key] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+    # print("SET: ", now_set)
+    return retrograde_tracker, add_dirt
 
 
 class Count:
@@ -145,7 +143,7 @@ class Count:
             return frame, 0, 0
         # 根据视频尺寸，填充供撞线计算使用的polygon
         polygon_mask_blue_and_yellow = self.__draw_mask()
-        cv2.line(frame, self.point_1, self.point_2, (0, 0, 255), 2, 4)
+        cv2.line(frame, self.point_1, self.point_2, (138, 43, 226), 4)
         if len(list_bboxs) > 0:
             # ----------------------判断撞线----------------------
             for item_bbox in list_bboxs:

@@ -28,6 +28,8 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.cap = []
         self.timer_camera = QTimer()  # 定义定时器
         self.count = Count()  # 定义计数器统计车流量
+        self.__ill_parking_count = 0  # 违停车辆计数器
+        self.__retrograde_count = 0  # 逆停车辆计数器
         self.frame_count = 0  # 视频播放帧数计数器
         self.__press_mouse = ()  # 车流量统计线起点
         self.__release_mouse = ()  # 车流量统计线终点
@@ -64,7 +66,8 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.video_name, _ = QFileDialog.getOpenFileName(self, "Open", "", "*.mp4;;*.avi;;All Files(*)")
         # self.video_name = 0
         if self.video_name != "":  # “”为用户取消
-            self.label_head.setText("正在播放视频，请进行检测")
+            self.label_head.setText("请开启目标检测与跟踪网络")
+            self.label_head.setStyleSheet("background:rgb(124, 83, 124);border-radius: 13px;")
             self.cap = cv2.VideoCapture(self.video_name)
             self.timer_camera.start(50)
             self.timer_camera.timeout.connect(self.show_frame)
@@ -109,17 +112,22 @@ class MyMainForm(QMainWindow, Ui_Dialog):
             # self.cap.release()
             self.btn_stop_detect.setText("开始播放")
             self.label_head.setText("视频已停止播放")
-            self.label_head.setStyleSheet("background:pink;")
+            self.label_head.setStyleSheet("background:red;border-radius: 13px;")
         elif self.__stop_show_flag:
             self.__stop_show_flag = False
             self.btn_stop_detect.setText("暂停播放")
+            # 头部状态栏显示
+            if self.__detect_flag:
+                self.label_head.setText("已开启目标检测与跟踪网络")
+                self.label_head.setStyleSheet("background:rgb(67, 67, 67);border-radius: 13px;")
+            else:
+                self.label_head.setText("请开启目标检测与跟踪网络")
+                self.label_head.setStyleSheet("background:rgb(124, 83, 124);border-radius: 13px;")
             self.timer_camera.start()
-            self.label_head.setText("正在播放视频，请进行检测")
-            self.label_head.setStyleSheet("background:yellow;")
-            # self.timer_camera.timeout.connect(self.show_frame)
         else:
             # self.label_num.setText("Push the left upper corner button to Quit.")
             Warming = QMessageBox.warning(self, "Warming", "Push the left upper corner button to Quit.", QMessageBox.Yes)
+        # self.timer_camera.timeout.connect(self.show_frame)
 
     def detection(self):
         """
@@ -129,11 +137,11 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         if self.__detect_flag:
             self.label_head.setText("已开启目标检测与跟踪网络")
             self.btn_go_detect.setText("结束检测")
-            self.label_head.setStyleSheet("background: rgb(0, 255, 127)}")
+            self.label_head.setStyleSheet("background: rgb(67, 67, 67);border-radius: 13px;}")
         else:
-            self.label_head.setText("正在播放视频，请进行检测")
+            self.label_head.setText("请开启目标检测与跟踪网络")
             self.btn_go_detect.setText("开始检测")
-            self.label_head.setStyleSheet("background:red;")
+            self.label_head.setStyleSheet("background:rgb(124, 83, 124);border-radius: 13px;")
 
     def mousePressEvent(self, event):
         """
@@ -244,8 +252,9 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         """
         弹窗询问是否进行车辆逆行检测
         """
-        rec_code = QMessageBox.information(self, "警告", "请确保当前屏幕仅包含一条单向单行车道", QMessageBox.Yes | QMessageBox.No,
+        rec_code = QMessageBox.information(self, "警告", "<font color='white'>请确保当前屏幕仅包含一条单向单行车道</font>", QMessageBox.Yes | QMessageBox.No,
                                            QMessageBox.Yes)
+        # rec_code.setStyleSheet("color: white;")
         if rec_code == 65536:  # 如果取消车辆逆行检测
             print("NO")
         else:  # 如果进行车辆逆行检测
@@ -279,6 +288,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.label_traffic_detail.setText("")
         self.label_up_count.setText("")
         self.label_down_count.setText("")
+        self.label_retrograde.setText("")
 
         # 取消显示分割线
         self.label_line1.setText("")
@@ -290,18 +300,24 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         """
         if self.__retrograde_flag:  # 打开视频播放
             self.__retrograde_flag = not self.__retrograde_flag
-            self.label_head.setText("已开启目标检测与跟踪网络")
-            self.label_retrograde.setText("正在进行车辆检测: \n")
+            # self.label_head.setText("已开启目标检测与跟踪网络")
+            self.label_retrograde.setText("正在进行车辆逆行检测: \n")
         temp_dirt = {}
-        if len(self.__retrograde_release_mouse) > 0 and len(self.__retrograde_press_mouse) > 0:
-            self.__retrograde_dirt, temp_dirt = get_retrograde(id_tracker=self.__id_tracker,
-                                                               start_point=self.__retrograde_press_mouse,
-                                                               retrograde_tracker=self.__retrograde_dirt,
-                                                               end_point=self.__retrograde_release_mouse)
+        self.__retrograde_dirt, temp_dirt = get_retrograde(id_tracker=self.__id_tracker,
+                                                           start_point=self.__retrograde_press_mouse,
+                                                           end_point=self.__retrograde_release_mouse,
+                                                           retrograde_tracker=self.__retrograde_dirt)
+        # if len(self.__retrograde_release_mouse) > 0 and len(self.__retrograde_press_mouse) > 0:  # 如果指定了车辆行驶方向
+        #     pass
         # --------------------------------------------------------------------------------------------------
+        if self.__retrograde_count > 15:
+            self.__retrograde_count = 0
+            self.label_retrograde.setText('正在进行车辆逆行检测: \n')
+
         text_show = ""
         if len(temp_dirt) > 0:
-            for key, time in temp_dirt:
+            for key, time in temp_dirt.items():
+                self.__retrograde_count += 1
                 text_show += '{}: {}\n'.format(key, time)
         # ---------------------------------------------------------------------------------------------------
         self.label_retrograde.setText(self.label_retrograde.text() + text_show)
@@ -327,7 +343,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         if len(id_temp) > 0:
             for id_, str_time in id_temp.items():
                 str_ += '{} {}\n'.format(id_, str_time)
-            print(self.label_ill_parking.text() + str_)
+            # print(self.label_ill_parking.text() + str_)
             self.label_ill_parking.setText(self.label_ill_parking.text() + str_)
 
     def __get_traffic_flow(self, frame, list_bboxs):
