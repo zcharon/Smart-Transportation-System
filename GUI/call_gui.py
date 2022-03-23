@@ -126,7 +126,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
             self.timer_camera.start()
         else:
             # self.label_num.setText("Push the left upper corner button to Quit.")
-            Warming = QMessageBox.warning(self, "Warming", "Push the left upper corner button to Quit.", QMessageBox.Yes)
+            QMessageBox.warning(self, "Warming", "Push the left upper corner button to Quit.", QMessageBox.Yes)
         # self.timer_camera.timeout.connect(self.show_frame)
 
     def detection(self):
@@ -252,8 +252,8 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         """
         弹窗询问是否进行车辆逆行检测
         """
-        rec_code = QMessageBox.information(self, "警告", "<font color='white'>请确保当前屏幕仅包含一条单向单行车道</font>", QMessageBox.Yes | QMessageBox.No,
-                                           QMessageBox.Yes)
+        rec_code = QMessageBox.information(self, "警告", "<font color='white'>请确保当前屏幕仅包含一条单向单行车道</font>",
+                                           QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         # rec_code.setStyleSheet("color: white;")
         if rec_code == 65536:  # 如果取消车辆逆行检测
             print("NO")
@@ -269,11 +269,14 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         # 初始化系统变量
         self.__release_mouse = ()
         self.__press_mouse = ()
+        self.__retrograde_press_mouse = ()
+        self.__retrograde_release_mouse = ()
         self.video_name = ""  # 被播放视频的路径
         self.frame = []  # 保存图片
         self.__stop_show_flag = False  # 检测是否暂停播放
         self.__detect_flag = False  # 检测flag
-        self.__ill_parking_flag = False  # 检测是否有违停
+        self.__ill_parking_flag = False  # 检测是否开启逆行检测
+        self.__retrograde_flag = False  # 检测是否开启逆行检测
         self.__id_tracker = {}
         self.cap = []
         self.timer_camera = QTimer()  # 定义定时器
@@ -302,7 +305,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
             self.__retrograde_flag = not self.__retrograde_flag
             # self.label_head.setText("已开启目标检测与跟踪网络")
             self.label_retrograde.setText("正在进行车辆逆行检测: \n")
-        temp_dirt = {}
+        # temp_dirt = {}
         self.__retrograde_dirt, temp_dirt = get_retrograde(id_tracker=self.__id_tracker,
                                                            start_point=self.__retrograde_press_mouse,
                                                            end_point=self.__retrograde_release_mouse,

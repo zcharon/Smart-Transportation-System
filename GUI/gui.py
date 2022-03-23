@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(1590, 860)
+        Dialog.resize(1590, 888)
         Dialog.setStyleSheet("background-color:rgb(38, 38, 38);")
         self.label_head = QtWidgets.QLabel(Dialog)
         self.label_head.setGeometry(QtCore.QRect(480, 0, 361, 31))
@@ -29,6 +29,7 @@ class Ui_Dialog(object):
         self.label_frame.setGeometry(QtCore.QRect(10, 30, 1331, 821))
         self.label_frame.setMouseTracking(True)
         self.label_frame.setStyleSheet("background-color: rgb(33, 33, 33)")
+        self.label_frame.setText("")
         self.label_frame.setObjectName("label_frame")
         self.label_mouse_x = QtWidgets.QLabel(Dialog)
         self.label_mouse_x.setGeometry(QtCore.QRect(1190, 860, 72, 15))
@@ -534,7 +535,6 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label_head.setText(_translate("Dialog", "请选择视频进行分析"))
-        self.label_frame.setText(_translate("Dialog", "请选择视频分析"))
         self.combox_fun.setItemText(0, _translate("Dialog", "功能"))
         self.combox_fun.setItemText(1, _translate("Dialog", "清空车流量"))
         self.combox_fun.setItemText(2, _translate("Dialog", "清空违停统计"))

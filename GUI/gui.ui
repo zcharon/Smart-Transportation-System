@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1590</width>
-    <height>860</height>
+    <height>888</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -57,7 +57,7 @@ border-radius: 13px;
     <string notr="true">background-color: rgb(33, 33, 33)</string>
    </property>
    <property name="text">
-    <string>请选择视频分析</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_mouse_x">
