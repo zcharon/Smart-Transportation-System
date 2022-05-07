@@ -8,31 +8,32 @@
 #                   P         R     mAP.5 mAP.5:.95       box       obj       cls
 # Metrics:        0.6     0.936     0.896     0.684    0.0115   0.00805   0.00146
 
-lr0: 0.0032
-lrf: 0.12
-momentum: 0.843
-weight_decay: 0.00036
+lr0: 0.0032  # 学习率
+lrf: 0.12  # 余弦退火超参数
+momentum: 0.843  # 学习率动量
+weight_decay: 0.00036  # 权重衰减系数
 warmup_epochs: 2.0
 warmup_momentum: 0.5
 warmup_bias_lr: 0.05
 box: 0.0296
-cls: 0.243
-cls_pw: 0.631
-obj: 0.301
-obj_pw: 0.911
-iou_t: 0.2
-anchor_t: 2.91
+cls: 0.243  # 分类损失的系数
+cls_pw: 0.631  # 分类BCELoss中正样本的权重
+obj: 0.301  # 有无物体损失的系数
+obj_pw: 0.911  # 有无物体BCELoss中正样本的权重
+iou_t: 0.2  # 标签与anchors的iou阈值iou training threshold
+anchor_t: 2.91  # 标签的长h宽w/anchor的长h_a宽w_a阈值, 即h/h_a, w/w_a都要在(1/2.26, 2.26)之间anchor-multiple threshold
 # anchors: 3.63
-fl_gamma: 0.0
-hsv_h: 0.0138
-hsv_s: 0.664
-hsv_v: 0.464
-degrees: 0.373
-translate: 0.245
-scale: 0.898
-shear: 0.602
-perspective: 0.0
-flipud: 0.00856
-fliplr: 0.5
+fl_gamma: 0.0  # 设为0则表示不使用focal loss(efficientDet default is gamma=1.5)
+# 数据增强系数, 包括颜色空间和图片空间
+hsv_h: 0.0138  # 色调
+hsv_s: 0.664  # 饱和度
+hsv_v: 0.464  # 明度
+degrees: 0.373 # 选择角度
+translate: 0.245  # 水平和垂直角度
+scale: 0.898  # 缩放
+shear: 0.602  # 剪切
+perspective: 0.0  # 透视变换参数
+flipud: 0.00856  # 上下翻转
+fliplr: 0.5  # 左右翻转
 mosaic: 1.0
-mixup: 0.243
+mixup: 0.243  # mixup参数

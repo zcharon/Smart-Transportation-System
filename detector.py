@@ -15,7 +15,7 @@ from yolov5.utils.datasets import letterbox
 
 
 # MODEL_WEIGHTS_PATH_V5 = r'yolov5/weights/yolov5s.pt'
-MODEL_WEIGHTS_PATH_V5 = r'yolov5/runs/train/exp/detrac.pt'
+MODEL_WEIGHTS_PATH_V5 = r'yolov5/runs/train/exp2/weights/best.pt'
 
 
 class BaseDet(object):

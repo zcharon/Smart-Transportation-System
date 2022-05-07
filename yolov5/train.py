@@ -24,6 +24,7 @@ from tqdm import tqdm
 import test  # import test.py to get mAP after each epoch
 from models.experimental import attempt_load
 from models.yolo import Model
+from models.common import BiFPN2, BiFPN3
 from utils.autoanchor import check_anchors
 from utils.datasets import create_dataloader
 from utils.general import labels_to_class_weights, increment_path, labels_to_image_weights, init_seeds, \
@@ -39,10 +40,12 @@ logger = logging.getLogger(__name__)
 
 
 def train(hyp, opt, device, tb_writer=None):
+    # 以python命令行的方式进行传参
     logger.info(colorstr('hyperparameters: ') + ', '.join(f'{k}={v}' for k, v in hyp.items()))
     save_dir, epochs, batch_size, total_batch_size, weights, rank = \
         Path(opt.save_dir), opt.epochs, opt.batch_size, opt.total_batch_size, opt.weights, opt.global_rank
 
+    # 确定权重文件的路径
     # Directories
     wdir = save_dir / 'weights'
     wdir.mkdir(parents=True, exist_ok=True)  # make dir
@@ -50,17 +53,18 @@ def train(hyp, opt, device, tb_writer=None):
     best = wdir / 'best.pt'
     results_file = save_dir / 'results.txt'
 
+    # 保存运行的配置
     # Save run settings
     with open(save_dir / 'hyp.yaml', 'w') as f:
-        yaml.dump(hyp, f, sort_keys=False)
+        yaml.dump(hyp, f, sort_keys=False)  # 运行时各种超参数配置
     with open(save_dir / 'opt.yaml', 'w') as f:
-        yaml.dump(vars(opt), f, sort_keys=False)
+        yaml.dump(vars(opt), f, sort_keys=False)  # 各种网络属性配置
 
     # Configure
     plots = not opt.evolve  # create plots
-    cuda = device.type != 'cpu'
-    init_seeds(2 + rank)
-    with open(opt.data) as f:
+    cuda = device.type != 'cpu'  # 配置运行设备
+    init_seeds(2 + rank)  # 设置随机数种子
+    with open(opt.data) as f:  # 读取数据
         data_dict = yaml.load(f, Loader=yaml.SafeLoader)  # data dict
     is_coco = opt.data.endswith('coco.yaml')
 
@@ -118,6 +122,10 @@ def train(hyp, opt, device, tb_writer=None):
             pg2.append(v.bias)  # biases
         if isinstance(v, nn.BatchNorm2d):
             pg0.append(v.weight)  # no decay
+        elif isinstance(v, BiFPN2) and hasattr(v, 'weight') and isinstance(v.w, nn.Parameter):
+            pg1.append(v.weight)
+        elif isinstance(v, BiFPN3) and hasattr(v, 'weight') and isinstance(v.w, nn.Parameter):
+            pg1.append(v.weight)
         elif hasattr(v, 'weight') and isinstance(v.weight, nn.Parameter):
             pg1.append(v.weight)  # apply decay
 
@@ -454,12 +462,13 @@ def train(hyp, opt, device, tb_writer=None):
 
 
 if __name__ == '__main__':
+    # 设置python命令行参数属性
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', type=str, default='weights/yolov5s.pt', help='initial weights path')
-    parser.add_argument('--cfg', type=str, default='models/yolov5s.yaml', help='model.yaml path')
-    parser.add_argument('--data', type=str, default='data/coco128.yaml', help='data.yaml path')
+    parser.add_argument('--weights', type=str, default='', help='initial weights path')
+    parser.add_argument('--cfg', type=str, default='models/yolov5s.yaml', help='model.yaml path')  # 模型配置文件、网络结构
+    parser.add_argument('--data', type=str, default='data/coco128.yaml', help='data.yaml path')  #
     parser.add_argument('--hyp', type=str, default='data/hyp.scratch.yaml', help='hyperparameters path')
-    parser.add_argument('--epochs', type=int, default=300)
+    parser.add_argument('--epochs', type=int, default=2)
     parser.add_argument('--batch-size', type=int, default=8, help='total batch size for all GPUs')
     parser.add_argument('--img-size', nargs='+', type=int, default=[640, 640], help='[train, test] image sizes')
     parser.add_argument('--rect', action='store_true', help='rectangular training')

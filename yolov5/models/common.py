@@ -18,6 +18,171 @@ from utils.plots import color_list, plot_one_box
 from utils.torch_utils import time_synchronized
 
 
+# -------------------------------------------------------------------------------------------------------------------------------#
+# YOLOv5模型改进：将CSPNet更改为MobileNetV3-Small特征提取网络，在可容忍的精度损失的前提下降低网络参数量，提升运行速度。
+# -------------------------------------------------------------------------------------------------------------------------------#
+class h_sigmoid(nn.Module):
+    """
+    hsigmoid: 近似操作模拟sigmoid
+    """
+
+    def __init__(self, inplace=True):
+        super(h_sigmoid, self).__init__()
+        self.relu = nn.ReLU6(inplace=inplace)
+
+    def forward(self, x):
+        return self.relu(x + 3) / 6
+
+
+class h_swish(nn.Module):
+    """
+    hswish：近似操作模拟swish
+    """
+
+    def __init__(self, inplace=True):
+        super(h_swish, self).__init__()
+        self.sigmoid = h_sigmoid(inplace=inplace)
+
+    def forward(self, x):
+        y = self.sigmoid(x)
+        return x * y
+
+
+class SELayer(nn.Module):
+    """
+    轻量级的注意力模型: 调整每个通道的权重
+    """
+
+    def __init__(self, channel, reduction=4):
+        super(SELayer, self).__init__()
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            # 第一次全连接，降低维度
+            nn.Linear(channel, channel // reduction),
+            nn.ReLU(inplace=True),
+            # 第二次全连接，恢复维度
+            nn.Linear(channel // reduction, channel),
+            h_sigmoid()
+        )
+
+    def forward(self, x):
+        b, c, _, _ = x.size()
+        # squeeze: 全局平均池化的操作。将一个c通道，hxw的特征图，压成c通道1x1
+        # 利用得到的结果是表示全局信息
+        y = self.avg_pool(x)
+        y = y.view(b, c)
+        # 激发，自适应重新校准
+        y = self.fc(y).view(b, c, 1, 1)
+        return x * y
+
+
+class ConvBnHswish(nn.Module):
+    """
+    利用1X1卷积进行通道压缩，进一步压缩模型大小
+    """
+
+    def __init__(self, c1, c2, stride):
+        super(ConvBnHswish, self).__init__()
+        self.conv = nn.Conv2d(c1, c2, 3, stride, 1, bias=False)
+        self.bn = nn.BatchNorm2d(c2)
+        self.act = h_swish()
+
+    def forward(self, x):
+        return self.act(self.bn(self.conv(x)))
+
+    def fuseforward(self, x):
+        return self.act(self.conv(x))
+
+
+class InvertedResidual(nn.Module):
+    """
+    深度可分离卷积
+    """
+
+    def __init__(self, inp, oup, hidden_dim, kernel_size, stride, use_se, use_hs):
+        super(InvertedResidual, self).__init__()
+        assert stride in [1, 2]
+
+        self.identity = stride == 1 and inp == oup
+
+        if inp == hidden_dim:
+            self.conv = nn.Sequential(
+                # dw: 通道可分离卷积使用分组卷积操作进行，这里分成和卷积核相同的channel组数实现。
+                nn.Conv2d(hidden_dim, hidden_dim, kernel_size, stride, (kernel_size - 1) // 2, groups=hidden_dim, bias=False),
+                nn.BatchNorm2d(hidden_dim),
+                h_swish() if use_hs else nn.ReLU(inplace=True),
+                # Squeeze-and-Excite: 注意力机制
+                SELayer(hidden_dim) if use_se else nn.Sequential(),
+                # pw-linear：利用1X1卷积输出指定通道个数的卷积，聚合分离特征
+                nn.Conv2d(hidden_dim, oup, 1, 1, 0, bias=False),
+                nn.BatchNorm2d(oup),
+            )
+        else:
+            self.conv = nn.Sequential(
+                # pw
+                nn.Conv2d(inp, hidden_dim, 1, 1, 0, bias=False),
+                nn.BatchNorm2d(hidden_dim),
+                h_swish() if use_hs else nn.ReLU(inplace=True),
+                # dw
+                nn.Conv2d(hidden_dim, hidden_dim, kernel_size, stride, (kernel_size - 1) // 2, groups=hidden_dim, bias=False),
+                nn.BatchNorm2d(hidden_dim),
+                # Squeeze-and-Excite
+                SELayer(hidden_dim) if use_se else nn.Sequential(),
+                h_swish() if use_hs else nn.ReLU(inplace=True),
+                # pw-linear
+                nn.Conv2d(hidden_dim, oup, 1, 1, 0, bias=False),
+                nn.BatchNorm2d(oup),
+            )
+
+    def forward(self, x):
+        y = self.conv(x)
+        if self.identity:
+            return x + y
+        else:
+            return y
+
+
+# -------------------------------------------------------------------------------------------------------------------------------#
+# YOLOv5模型改进思路：将PANET更换为BiFPN，增加特征融合层性能
+# -------------------------------------------------------------------------------------------------------------------------------#
+# 结合BiFPN 设置可学习参数 学习不同分支的权重
+# 两个分支concat操作
+class BiFPN2(nn.Module):
+    def __init__(self, dimension=1):
+        super(BiFPN2, self).__init__()
+        self.d = dimension
+        self.w = nn.Parameter(torch.ones(2, dtype=torch.float32), requires_grad=True)
+        self.epsilon = 0.0001
+
+    def forward(self, x):
+        w = self.w
+        weight = w / (torch.sum(w, dim=0) + self.epsilon)  # 将权重进行归一化
+        # Fast normalized fusion
+        x = [weight[0] * x[0], weight[1] * x[1]]
+        return torch.cat(x, self.d)
+
+
+# 三个分支concat操作
+class BiFPN3(nn.Module):
+    def __init__(self, dimension=1):
+        super(BiFPN3, self).__init__()
+        self.d = dimension
+        # 设置可学习参数 nn.Parameter的作用是：将一个不可训练的类型Tensor转换成可以训练的类型parameter
+        # 并且会向宿主模型注册该参数 成为其一部分 即model.parameters()会包含这个parameter
+        # 从而在参数优化的时候可以自动一起优化
+        self.w = nn.Parameter(torch.ones(3, dtype=torch.float32), requires_grad=True)
+        self.epsilon = 0.0001
+
+    def forward(self, x):
+        w = self.w
+        weight = w / (torch.sum(w, dim=0) + self.epsilon)  # 将权重进行归一化
+        # Fast normalized fusion
+        x = [weight[0] * x[0], weight[1] * x[1], weight[2] * x[2]]
+        return torch.cat(x, self.d)
+
+
+# -------------------------------------------------------------------------------------------------------------------------------#
+
 def autopad(k, p=None):  # kernel, padding
     # Pad to 'same'
     if p is None:
