@@ -1,5 +1,4 @@
 from detector import DetectorV5
-from detector import DetectorX
 import imutils
 import cv2
 

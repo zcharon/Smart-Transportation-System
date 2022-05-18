@@ -46,15 +46,17 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.__retrograde_flag = False  # 判断是否进行车辆逆行检测
 
         # 开启视频按键
-        self.btn_open_video.clicked.connect(self.open_video)
+        # self.btn_open_video.clicked.connect(self.open_video)
         # 关闭视频按钮
         self.btn_stop_detect.clicked.connect(self.stop_video)
         # 是否进行检测
         self.btn_go_detect.clicked.connect(self.detection)
         # 是否进行违停检测
         self.btn_illegal_parking.clicked.connect(self.__conn_illegal_parking)
-        # 下拉列表控件
-        self.combox_fun.currentIndexChanged.connect(self.select_change)
+        # 功能下拉列表控件
+        self.combox_fun.currentIndexChanged.connect(self.select_fun_change)
+        # 摄像头下拉列表控件
+        self.chose_camera.currentIndexChanged.connect(self.select_camera_change)
         # 进行车辆逆行检测
         self.btn_retrograde.clicked.connect(self.if_retrograde)
 
@@ -63,7 +65,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         打开视频按钮响应函数
         """
         self.__reset_parameters()
-        self.video_name, _ = QFileDialog.getOpenFileName(self, "Open", "", "*.mp4;;*.avi;;All Files(*)")
+        # self.video_name, _ = QFileDialog.getOpenFileName(self, "Open", "", "*.mp4;;*.avi;;All Files(*)")
         # self.video_name = 0
         if self.video_name != "":  # “”为用户取消
             self.label_head.setText("请开启目标检测与跟踪网络")
@@ -235,7 +237,21 @@ class MyMainForm(QMainWindow, Ui_Dialog):
             self.label_mouse_x.setText('X:' + str(mouse_track.x()))
             self.label_mouse_y.setText('Y:' + str(mouse_track.y()))
 
-    def select_change(self, i):
+    def select_camera_change(self, i):
+        if i == 0:
+            self.video_name = ''
+            self.open_video()
+        elif i == 1:
+            self.video_name = r'video/test/01.mp4'
+            self.open_video()
+        elif i == 2:
+            self.video_name = r'video/test/02.mp4'
+            self.open_video()
+        elif i == 3:
+            self.video_name = r'video/test/03.mp4'
+            self.open_video()
+
+    def select_fun_change(self, i):
         # 功能区不做任何处理
         if i == 0:
             pass
@@ -271,16 +287,20 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         self.__press_mouse = ()
         self.__retrograde_press_mouse = ()
         self.__retrograde_release_mouse = ()
-        self.video_name = ""  # 被播放视频的路径
+        # self.video_name = ""  # 被播放视频的路径
         self.frame = []  # 保存图片
         self.__stop_show_flag = False  # 检测是否暂停播放
         self.__detect_flag = False  # 检测flag
         self.__ill_parking_flag = False  # 检测是否开启逆行检测
         self.__retrograde_flag = False  # 检测是否开启逆行检测
+
+        self.count.up_count = 0
+        self.count.down_count = 0
+
         self.__id_tracker = {}
         self.cap = []
         self.timer_camera = QTimer()  # 定义定时器
-        self.btn_open_video.setText("打开视频")
+        # self.btn_open_video.setText("打开视频")
         self.btn_go_detect.setText("开始检测")
         self.btn_stop_detect.setText("停止检测")
         self.label_head.setText("请选择视频进行分析")
@@ -303,7 +323,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
         """
         if self.__retrograde_flag:  # 打开视频播放
             self.__retrograde_flag = not self.__retrograde_flag
-            # self.label_head.setText("已开启目标检测与跟踪网络")
+            self.label_head.setText("已开启目标检测与跟踪网络")
             self.label_retrograde.setText("正在进行车辆逆行检测: \n")
         # temp_dirt = {}
         self.__retrograde_dirt, temp_dirt = get_retrograde(id_tracker=self.__id_tracker,
