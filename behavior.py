@@ -162,7 +162,7 @@ class Count:
                     if track_id in self.list_overlapping_yellow_polygon:
                         # 上行+1
                         self.up_count += 1
-                        print('up count:', self.up_count, ', up id:', self.list_overlapping_yellow_polygon)
+                        # print('up count:', self.up_count, ', up id:', self.list_overlapping_yellow_polygon)
                         # 删除 黄polygon list 中的此id
                         self.list_overlapping_yellow_polygon.remove(track_id)
 
@@ -175,7 +175,7 @@ class Count:
                     if track_id in self.list_overlapping_blue_polygon:
                         # 下行+1
                         self.down_count += 1
-                        print('down count:', self.down_count, ', down id:', self.list_overlapping_blue_polygon)
+                        # print('down count:', self.down_count, ', down id:', self.list_overlapping_blue_polygon)
                         # 删除 蓝polygon list 中的此id
                         self.list_overlapping_blue_polygon.remove(track_id)
             # ----------------------清除无用id----------------------

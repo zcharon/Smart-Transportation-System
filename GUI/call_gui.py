@@ -13,12 +13,12 @@ from PyQt5.QtCore import QTimer
 from PyQt5 import QtCore
 from PyQt5.QtCore import *
 
-from .gui import Ui_Dialog
+from .gui import Ui_dialog
 from detector import DetectorV5
 from behavior import get_illegal_parking, Count, get_retrograde
 
 
-class MyMainForm(QMainWindow, Ui_Dialog):
+class MyMainForm(QMainWindow, Ui_dialog):
     def __init__(self, parent=None):
         super(MyMainForm, self).__init__(parent)
         self.setupUi(self)
@@ -166,7 +166,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                     flag = True
                 if not flag:
                     self.__press_mouse = (x - 10, y - 30)
-                print("车流量", self.__press_mouse)
+                # print("车流量", self.__press_mouse)
         if self.__detect_flag and self.__retrograde_flag:
             if event.buttons() & QtCore.Qt.LeftButton:
                 self.label_frame.setMouseTracking(True)
@@ -183,7 +183,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                     flag = True
                 if not flag:
                     self.__retrograde_press_mouse = (x - 10, y - 30)
-                print("逆行", self.__retrograde_press_mouse)
+                # print("逆行", self.__retrograde_press_mouse)
 
     def mouseReleaseEvent(self, event):
         """
@@ -204,7 +204,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                 flag = True
             if not flag:
                 self.__release_mouse = (x - 10, y - 30)
-            print("车流量", self.__release_mouse)
+            # print("车流量", self.__release_mouse)
             self.label_mouse_x.setText("")
             self.label_mouse_y.setText("")
         if self.__detect_flag and self.__retrograde_flag:
@@ -224,7 +224,7 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                 if len(self.__retrograde_press_mouse) > 0:  # 如果两次鼠标都有记录，则打开视频播放
                     self.timer_camera.start(50)
                     self.timer_camera.timeout.connect(self.show_frame)
-            print("逆行", self.__retrograde_release_mouse)
+            # print("逆行", self.__retrograde_release_mouse)
             self.label_mouse_x.setText("")
             self.label_mouse_y.setText("")
 
@@ -272,7 +272,8 @@ class MyMainForm(QMainWindow, Ui_Dialog):
                                            QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         # rec_code.setStyleSheet("color: white;")
         if rec_code == 65536:  # 如果取消车辆逆行检测
-            print("NO")
+            # print("NO")
+            pass
         else:  # 如果进行车辆逆行检测
             self.timer_camera.stop()
             self.label_head.setText("请在屏幕中绘制车辆行驶方向！")

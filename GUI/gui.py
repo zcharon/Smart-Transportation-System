@@ -11,12 +11,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(1590, 888)
-        Dialog.setStyleSheet("background-color:rgb(38, 38, 38);")
-        self.label_head = QtWidgets.QLabel(Dialog)
+class Ui_dialog(object):
+    def setupUi(self, dialog):
+        dialog.setObjectName("dialog")
+        dialog.resize(1590, 888)
+        dialog.setStyleSheet("background-color:rgb(38, 38, 38);")
+        self.label_head = QtWidgets.QLabel(dialog)
         self.label_head.setGeometry(QtCore.QRect(460, 0, 361, 31))
         self.label_head.setStyleSheet("background-color: rgb(85, 85, 127);\n"
 "border-radius: 13px;\n"
@@ -24,14 +24,14 @@ class Ui_Dialog(object):
 "")
         self.label_head.setAlignment(QtCore.Qt.AlignCenter)
         self.label_head.setObjectName("label_head")
-        self.label_frame = QtWidgets.QLabel(Dialog)
+        self.label_frame = QtWidgets.QLabel(dialog)
         self.label_frame.setEnabled(True)
         self.label_frame.setGeometry(QtCore.QRect(10, 30, 1331, 821))
         self.label_frame.setMouseTracking(True)
         self.label_frame.setStyleSheet("background-color: rgb(33, 33, 33)")
         self.label_frame.setText("")
         self.label_frame.setObjectName("label_frame")
-        self.label_mouse_x = QtWidgets.QLabel(Dialog)
+        self.label_mouse_x = QtWidgets.QLabel(dialog)
         self.label_mouse_x.setGeometry(QtCore.QRect(1190, 860, 72, 15))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -74,7 +74,7 @@ class Ui_Dialog(object):
         self.label_mouse_x.setStyleSheet("")
         self.label_mouse_x.setText("")
         self.label_mouse_x.setObjectName("label_mouse_x")
-        self.label_mouse_y = QtWidgets.QLabel(Dialog)
+        self.label_mouse_y = QtWidgets.QLabel(dialog)
         self.label_mouse_y.setGeometry(QtCore.QRect(1270, 860, 72, 15))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -117,7 +117,7 @@ class Ui_Dialog(object):
         self.label_mouse_y.setStyleSheet("")
         self.label_mouse_y.setText("")
         self.label_mouse_y.setObjectName("label_mouse_y")
-        self.label_up_count = QtWidgets.QLabel(Dialog)
+        self.label_up_count = QtWidgets.QLabel(dialog)
         self.label_up_count.setGeometry(QtCore.QRect(1420, 160, 61, 16))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -160,7 +160,7 @@ class Ui_Dialog(object):
         self.label_up_count.setStyleSheet("")
         self.label_up_count.setText("")
         self.label_up_count.setObjectName("label_up_count")
-        self.label_down_count = QtWidgets.QLabel(Dialog)
+        self.label_down_count = QtWidgets.QLabel(dialog)
         self.label_down_count.setGeometry(QtCore.QRect(1350, 160, 61, 16))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -203,7 +203,7 @@ class Ui_Dialog(object):
         self.label_down_count.setStyleSheet("")
         self.label_down_count.setText("")
         self.label_down_count.setObjectName("label_down_count")
-        self.label_traffic_detail = QtWidgets.QLabel(Dialog)
+        self.label_traffic_detail = QtWidgets.QLabel(dialog)
         self.label_traffic_detail.setGeometry(QtCore.QRect(1350, 140, 221, 16))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -246,7 +246,7 @@ class Ui_Dialog(object):
         self.label_traffic_detail.setStyleSheet("")
         self.label_traffic_detail.setText("")
         self.label_traffic_detail.setObjectName("label_traffic_detail")
-        self.label_ill_parking = QtWidgets.QLabel(Dialog)
+        self.label_ill_parking = QtWidgets.QLabel(dialog)
         self.label_ill_parking.setGeometry(QtCore.QRect(1350, 200, 231, 151))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -289,7 +289,7 @@ class Ui_Dialog(object):
         self.label_ill_parking.setText("")
         self.label_ill_parking.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.label_ill_parking.setObjectName("label_ill_parking")
-        self.combox_fun = QtWidgets.QComboBox(Dialog)
+        self.combox_fun = QtWidgets.QComboBox(dialog)
         self.combox_fun.setGeometry(QtCore.QRect(1470, 0, 120, 21))
         self.combox_fun.setStyleSheet("background-color: rgb(66, 66, 66);\n"
 "color: white; \n"
@@ -299,7 +299,7 @@ class Ui_Dialog(object):
         self.combox_fun.addItem("")
         self.combox_fun.addItem("")
         self.combox_fun.addItem("")
-        self.label_line1 = QtWidgets.QLabel(Dialog)
+        self.label_line1 = QtWidgets.QLabel(dialog)
         self.label_line1.setGeometry(QtCore.QRect(1350, 360, 221, 16))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -341,7 +341,7 @@ class Ui_Dialog(object):
         self.label_line1.setPalette(palette)
         self.label_line1.setText("")
         self.label_line1.setObjectName("label_line1")
-        self.label_line0 = QtWidgets.QLabel(Dialog)
+        self.label_line0 = QtWidgets.QLabel(dialog)
         self.label_line0.setGeometry(QtCore.QRect(1350, 180, 231, 16))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -383,7 +383,7 @@ class Ui_Dialog(object):
         self.label_line0.setPalette(palette)
         self.label_line0.setText("")
         self.label_line0.setObjectName("label_line0")
-        self.label_retrograde = QtWidgets.QLabel(Dialog)
+        self.label_retrograde = QtWidgets.QLabel(dialog)
         self.label_retrograde.setGeometry(QtCore.QRect(1350, 380, 231, 281))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
@@ -426,35 +426,35 @@ class Ui_Dialog(object):
         self.label_retrograde.setText("")
         self.label_retrograde.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.label_retrograde.setObjectName("label_retrograde")
-        self.btn_go_detect = QtWidgets.QPushButton(Dialog)
+        self.btn_go_detect = QtWidgets.QPushButton(dialog)
         self.btn_go_detect.setGeometry(QtCore.QRect(1360, 40, 93, 28))
         self.btn_go_detect.setStyleSheet("background-color: rgb(66, 66, 66);\n"
 "color: white; \n"
 "border-radius: 10px;  \n"
 "")
         self.btn_go_detect.setObjectName("btn_go_detect")
-        self.btn_stop_detect = QtWidgets.QPushButton(Dialog)
+        self.btn_stop_detect = QtWidgets.QPushButton(dialog)
         self.btn_stop_detect.setGeometry(QtCore.QRect(1360, 90, 93, 28))
         self.btn_stop_detect.setStyleSheet("background-color: rgb(66, 66, 66);\n"
 "color: white; \n"
 "border-radius: 10px;  \n"
 "")
         self.btn_stop_detect.setObjectName("btn_stop_detect")
-        self.btn_illegal_parking = QtWidgets.QPushButton(Dialog)
+        self.btn_illegal_parking = QtWidgets.QPushButton(dialog)
         self.btn_illegal_parking.setGeometry(QtCore.QRect(1470, 40, 93, 28))
         self.btn_illegal_parking.setStyleSheet("background-color: rgb(66, 66, 66);\n"
 "color: white; \n"
 "border-radius: 10px;  \n"
 "")
         self.btn_illegal_parking.setObjectName("btn_illegal_parking")
-        self.btn_retrograde = QtWidgets.QPushButton(Dialog)
+        self.btn_retrograde = QtWidgets.QPushButton(dialog)
         self.btn_retrograde.setGeometry(QtCore.QRect(1470, 90, 93, 28))
         self.btn_retrograde.setStyleSheet("background-color: rgb(66, 66, 66);\n"
 "color: white; \n"
 "border-radius: 10px;  \n"
 "")
         self.btn_retrograde.setObjectName("btn_retrograde")
-        self.chose_camera = QtWidgets.QComboBox(Dialog)
+        self.chose_camera = QtWidgets.QComboBox(dialog)
         self.chose_camera.setGeometry(QtCore.QRect(1350, 0, 120, 21))
         self.chose_camera.setStyleSheet("background-color: rgb(66, 66, 66);\n"
 "color: white; \n"
@@ -466,21 +466,21 @@ class Ui_Dialog(object):
         self.chose_camera.addItem("")
         self.chose_camera.addItem("")
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(dialog)
+        QtCore.QMetaObject.connectSlotsByName(dialog)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label_head.setText(_translate("Dialog", "请选择视频进行分析"))
-        self.combox_fun.setItemText(0, _translate("Dialog", "功能"))
-        self.combox_fun.setItemText(1, _translate("Dialog", "清空车流量"))
-        self.combox_fun.setItemText(2, _translate("Dialog", "清空违停统计"))
-        self.btn_go_detect.setText(_translate("Dialog", "开始检测"))
-        self.btn_stop_detect.setText(_translate("Dialog", "暂停播放"))
-        self.btn_illegal_parking.setText(_translate("Dialog", "违停检测"))
-        self.btn_retrograde.setText(_translate("Dialog", "逆行检测"))
-        self.chose_camera.setItemText(0, _translate("Dialog", "选择摄像头"))
-        self.chose_camera.setItemText(1, _translate("Dialog", "摄像头01"))
-        self.chose_camera.setItemText(2, _translate("Dialog", "摄像头02"))
-        self.chose_camera.setItemText(3, _translate("Dialog", "摄像头03"))
+        dialog.setWindowTitle(_translate("dialog", "道路智能检测系统"))
+        self.label_head.setText(_translate("dialog", "请选择视频进行分析"))
+        self.combox_fun.setItemText(0, _translate("dialog", "功能"))
+        self.combox_fun.setItemText(1, _translate("dialog", "清空车流量"))
+        self.combox_fun.setItemText(2, _translate("dialog", "清空违停统计"))
+        self.btn_go_detect.setText(_translate("dialog", "开始检测"))
+        self.btn_stop_detect.setText(_translate("dialog", "暂停播放"))
+        self.btn_illegal_parking.setText(_translate("dialog", "违停检测"))
+        self.btn_retrograde.setText(_translate("dialog", "逆行检测"))
+        self.chose_camera.setItemText(0, _translate("dialog", "选择摄像头"))
+        self.chose_camera.setItemText(1, _translate("dialog", "摄像头01"))
+        self.chose_camera.setItemText(2, _translate("dialog", "摄像头02"))
+        self.chose_camera.setItemText(3, _translate("dialog", "摄像头03"))
