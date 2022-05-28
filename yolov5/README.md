@@ -68,5 +68,5 @@
    
    红色：YOLOv5+Mobilenet
    
-   ![[训练情况.png](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/训练情况.png)
+   ![训练情况.png](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/训练情况.png)
 
