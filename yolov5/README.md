@@ -22,7 +22,7 @@
 
       模型结构与参数量：
 
-      ![YOLOv5-MobilenetV2](README.assets\YOLOv5-MobilenetV2.png)
+      ![YOLOv5-MobilenetV2.png](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/YOLOv5-MobilenetV2.png))
 
       使用可分离卷积后，可以发现，参数量有了明显的降低，网络的运行速度大大提高。
 
@@ -30,7 +30,7 @@
 
       谷歌在EfficientNet中提出BiFPN特征融合网络，其理论性能比原始的PANet要好不少。并且，BiFPN与PANet的不同点还有，PANet在Neck层只能使用一次，而BiFPN在Neck层可以连续使用多次，大大增加了特征融合能力。
 
-      ![BiFPN.png](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/YOLOv5-MobilenetV2.png)
+      ![BiFPN.png](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/BiFPN.png)
 
       由图片可以看出，其在PANet的基础上增加了残差边，大大加强了网络的特征融合能力，其次，其删除了单输入的节点，在对网络造成很小的影响的前提下减少了网络的参数量，最后，该网络中增加了注意力机制。BiFPN = 新型加强版的PANet(重复双向跨尺度连接) + 带权重的特征融合机制。
 
