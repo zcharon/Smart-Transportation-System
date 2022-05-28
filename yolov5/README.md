@@ -6,11 +6,11 @@
 
    原始YOLOv5结构采用Backbone+Neck+Head结构，其中Backbone结构基础为CSPNet，Neck结构基础为PANet，Head为回归拟合
 
-   ​![README.assets\YOLOv5模型.jpg](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/YOLOv5模型.jpg)
+   ​![YOLOv5模型.jpg](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/YOLOv5模型.jpg)
 
    模型结构与参数量：
 
-   ![](README.assets\YOLOv5.png)
+   ![YOLOv5.png](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/YOLOv5.png)
 
    可以发现，整体模型参数量为7071633，共有283层。
 
@@ -30,11 +30,11 @@
 
       谷歌在EfficientNet中提出BiFPN特征融合网络，其理论性能比原始的PANet要好不少。并且，BiFPN与PANet的不同点还有，PANet在Neck层只能使用一次，而BiFPN在Neck层可以连续使用多次，大大增加了特征融合能力。
 
-      ![BiFPN](README.assets\BiFPN.png)
+      ![BiFPN.png](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/YOLOv5-MobilenetV2.png)
 
       由图片可以看出，其在PANet的基础上增加了残差边，大大加强了网络的特征融合能力，其次，其删除了单输入的节点，在对网络造成很小的影响的前提下减少了网络的参数量，最后，该网络中增加了注意力机制。BiFPN = 新型加强版的PANet(重复双向跨尺度连接) + 带权重的特征融合机制。
 
-      ![YOLOv5_BiFPN](README.assets\YOLOv5_BiFPN.png)
+      ![YOLOv5_BiFPN](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/YOLOv5_BiFPN.png)
 
       在该模型中，第16，19，22分别使用了BiFPN网络，但是模型总体参数相差不大。
 
@@ -68,5 +68,5 @@
    
    红色：YOLOv5+Mobilenet
    
-   ![训练情况](README.assets\训练情况.png)
+   ![[训练情况.png](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/训练情况.png)
 
