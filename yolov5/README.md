@@ -6,7 +6,7 @@
 
    原始YOLOv5结构采用Backbone+Neck+Head结构，其中Backbone结构基础为CSPNet，Neck结构基础为PANet，Head为回归拟合
 
-   ​		![](README.assets\YOLOv5模型.jpg)
+   ​![README.assets\YOLOv5模型.jpg](https://github.com/ZCharon/Smart-Transportation-System/blob/master/yolov5/README.assets/YOLOv5模型.jpg)
 
    模型结构与参数量：
 
