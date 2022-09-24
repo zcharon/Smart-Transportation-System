@@ -17,23 +17,23 @@
 
 6. 信息栏控制功能：在用户开始任何一个车辆行为识别功能后，可以选择信息栏控制功能。信息栏是系统检测车辆行为的信息输出界面，具有时效性与时间累积性。信息栏包含三个功能：车流量重新统计、清空车辆违停记录和清空车辆逆行记录。
 
-![系统流程图](https://github.com/ZCharon/Smart-Transportation-System/blob/master/README.assets/系统流程图.png)
+![系统流程图](https://github.com/zcharon/Smart-Transportation-System/blob/master/README.assets/系统流程图.png)
 
 ### 2. 车辆跟踪模块设计
 
 车辆跟踪模块是系统的基本模块，负责车辆的检测识别与跟踪。
 
-![目标跟踪](https://github.com/ZCharon/Smart-Transportation-System/blob/master/README.assets/目标跟踪.png)
+![目标跟踪](https://github.com/zcharon/Smart-Transportation-System/blob/master/README.assets/目标跟踪.png)
 
 ### 3. 车辆行为识别模块设计
 
-![行为识别](https://github.com/ZCharon/Smart-Transportation-System/blob/master/README.assets/行为识别.png)
+![行为识别](https://github.com/zcharon/Smart-Transportation-System/blob/master/README.assets/行为识别.png)
 
 如图，在用户选择“目标检测”之后，车辆跟踪模块会源源不断的输出车辆行驶轨迹队列。用户可以选择车辆行为识别模块对应的模块进行车辆行为识别，该模块共有：车流量统计、车辆违停检测与车辆违停统计三个功能。车流量统计采用掩膜计数法，车辆违停检测采用基于方向分解的连续帧间位移法，车辆逆行检测采用直线向量拟合法。当各功能完成检测后会将检测结果显示在前端的信息栏中。
 
 ### 4. 系统实现
 
-![img](https://github.com/ZCharon/Smart-Transportation-System/blob/master/README.assets/img.png)
+![img](https://github.com/zcharon/Smart-Transportation-System/blob/master/README.assets/img.png)
 1. 状态指示栏：状态指示栏用于状态提示。其分为：“请选择视频进行分析”，用户刚打开系统时，系统不会播放任何视频，这时状态栏提示用户选择一个摄像头视频进行播放分析；“请开启目标检测与跟踪网络”，提示用户对当前视频开启目标检测，只有开启目标检测才可以对车辆行为进行分析；“已开启目标检测与跟踪网络”，提示用户当前视频检测良好，状态正常；“视频已停止播放”，在用户点击停止检测时，系统会停止当前视频的播放与检测，同时状态栏显示此信息提示用户停止播放成功。
 
 2. 视频播放窗口：该窗口用于视频帧的显示，同时用于视频与用户交互。在用户点击目标检测后，视频播放窗口会检测用户鼠标的点击情况。用户可以播放窗口绘制一条直线，此时该窗口会显示一条紫色线段，该线段为车流量计数线，系统自动开启车流量计数功能。在用户点击车辆逆行检测后，须在该窗口绘制标准的车辆行驶方向用于车辆逆行检测。
