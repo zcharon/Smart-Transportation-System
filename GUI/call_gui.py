@@ -3,6 +3,7 @@
 @Author : guanghao zhou
 @File : call_gui.py
 """
+import numpy as np
 import imutils
 import cv2
 
@@ -83,6 +84,7 @@ class MyMainForm(QMainWindow, Ui_dialog):
             if ret:
                 frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
                 frame = imutils.resize(frame, height=self.label_frame.size().height())
+                frame = np.asarray(frame)
                 if self.__detect_flag:
                     result_im, list_bboxs, self.__id_tracker = self.det.feedCap(frame, self.__id_tracker)
                     # 如果绘制了车道线，则进行车道线统计
